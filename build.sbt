@@ -1,4 +1,4 @@
-name := "SchiffeVersenken"
+name := "Battleship"
 
 version := "1.0"
 
