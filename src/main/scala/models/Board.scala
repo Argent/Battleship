@@ -7,7 +7,8 @@ class Board {
   def setShippart(x: Int, y: Int, s: Shippart): Boolean = {
     for(i <- -1 to 1) {
       for(j <- -1 to 1) {
-        if(ships(x + i)(y + j) != null && ships(x + i)(y + j).ship != s.ship) {
+        if(x + i < 0 || y + j < 0 ||
+          (ships(x + i)(y + j) != null && ships(x + i)(y + j).ship != s.ship)) {
           return false
         }
       }
