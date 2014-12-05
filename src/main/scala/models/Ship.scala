@@ -1,5 +1,7 @@
 package models
 
+import models.ShipTypes.ShipTypes
+
 
 trait Ship {
   val parts: Array[Shippart]
@@ -62,6 +64,16 @@ trait Ship {
 }
 
 object Ship {
+  def createShip(s: ShipTypes): Ship = {
+    val ship = s.construct()
+
+
+    for(i <- 0 to ship.parts.length - 1) {
+      ship.parts(i) = new Shippart(ship)
+    }
+    ship
+  }
+
   def generateShipSet(): List[Ship] = {
     new AircraftCarrier()::new Battleship()::new Battleship::new Submarine()::
       new Submarine()::new Submarine()::new PatrolBoat()::new PatrolBoat()::
