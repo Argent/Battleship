@@ -4,18 +4,51 @@ import models.Direction.Direction
 import models.ShipTypes.ShipTypes
 
 
-trait Ship {
-  val parts: Array[Shippart]
+abstract case class Ship(shipform: List[(Int, Int)], x: Int, y: Int, d: Direction) {
+  var parts: List[Shippart] = Nil
+  var coords = Ship.rotateAndTranslate(d, shipform, x, y)
 
-  val shipform: Array[(Int, Int)]
 
-  
+
+  override def toString: String = {
+    "Hi, I'm a " + this.getClass() + "! My coords are: " + coords.toString
+  }
+
+
+  def setOnBoard(coords: List[(Int, Int)], setCoords: List[(Int, Int)], b: Board): Option[Board] = {
+
+    coords match {
+      case Nil => Some(b)
+      case x::xs => {
+        parts = new Shippart(this) :: parts
+        if(b.setShippart(x._1, x._2, parts.head)) {
+          setOnBoard(xs, x::setCoords, b)
+        } else {
+          unsetShip(x::setCoords, b)
+        }
+      }
+    }
+  }
+
+  def unsetShip(setCoords: List[(Int, Int)], b: Board): Option[Board] = {
+    setCoords match {
+      case Nil => None
+      case x::xs => {
+        b.unsetShippart(x._1, x._2)
+        unsetShip(xs, b)
+      }
+    }
+  }
+
+/*
   def setOnBoard(x: Int, y: Int, d: Direction.Value): Board => Option[Board] = {
     val rotatedShip = rotate(d)
-    
+
     (b: Board) => {
       val oldShips = Array.ofDim[Shippart](10, 10)
       Array.copy(b.ships, 0, oldShips, 0, b.ships.size)
+      println("After copying:")
+      ConsoleHelper.printArray(oldShips)
 
       var success = true
       var i = 0
@@ -27,12 +60,17 @@ trait Ship {
       }
 
       if(!success) {
+        println("Before copying:")
+        ConsoleHelper.printArray(oldShips)
+
         Array.copy(oldShips, 0, b.ships, 0, b.ships.size)
         None
       } else {
         Some(b)
       }
-      /*for (i <- 0 to rotatedShip.length - 1) {
+
+      /*
+      for (i <- 0 to rotatedShip.length - 1) {
         val success = b.setShippart(x + rotatedShip(i)._1,
           y + rotatedShip(i)._2,
           new Shippart(this))
@@ -45,41 +83,45 @@ trait Ship {
         }
       }
 
-      Some(b)*/
+      Some(b)
+      */
     }
   }
-  
+*/
   def isDestroyed: Boolean = {
     parts.filter(_.isDestroyed == false).length == 0
   }
   
-  def rotate(d: Direction) = {
-    d match {
-      case Direction.N => shipform.map((x: (Int, Int)) => (x._2, x._1 * (-1)))
-      case Direction.W => shipform.map((x: (Int, Int)) => (x._1 * (-1), x._2 * (-1)))
-      case Direction.S => shipform.map((x: (Int, Int)) => (x._2 * (-1), x._1))
-      case _ => shipform
-    }
-  }
+
   
 }
 
 object Ship {
-  def createShip(s: ShipTypes): Ship = {
-    val ship = s.construct()
+  def createShip(s: ShipTypes, x: Int, y: Int, d: Direction): Ship = {
+    s.construct(x, y, d)
 
-
+/*
     for(i <- 0 to ship.parts.length - 1) {
       ship.parts(i) = new Shippart(ship)
     }
-    ship
+    ship*/
   }
 
   def generateShipSet(): List[Ship] = {
-    createShip(ShipTypes.AircraftCarrier)::createShip(ShipTypes.Battleship)::createShip(ShipTypes.Battleship)::
+   /* createShip(ShipTypes.AircraftCarrier)::createShip(ShipTypes.Battleship)::createShip(ShipTypes.Battleship)::
       createShip(ShipTypes.Submarine)::createShip(ShipTypes.Submarine)::createShip(ShipTypes.Submarine)::
       createShip(ShipTypes.PatrolBoat)::createShip(ShipTypes.PatrolBoat)::createShip(ShipTypes.PatrolBoat)::
-      createShip(ShipTypes.PatrolBoat)::Nil
+      createShip(ShipTypes.PatrolBoat)::Nil*/
+    ???
+  }
+
+  def rotateAndTranslate(d: Direction, shipform: List[(Int, Int)], x: Int, y: Int): List[(Int, Int)] = {
+    d match {
+      case Direction.N => shipform.map((z: (Int, Int)) => (z._2 + x, (z._1 * (-1)) + y))
+      case Direction.W => shipform.map((z: (Int, Int)) => ((z._1 * (-1)) + x, (z._2 * (-1)) + y))
+      case Direction.S => shipform.map((z: (Int, Int)) => ((z._2 * (-1)) + x, (z._1 + y)))
+      case _ => shipform.map((z:(Int, Int)) => (z._1 + x, z._2 + y))
+    }
   }
 }
 

@@ -11,4 +11,12 @@ object ConsoleHelper {
       case x:String => x
     }
   }
+
+  def printArray[T](a: Array[Array[T]]): Unit = {
+    a.foreach(x => {
+      x.foreach(y => { print((if(y == null) "W" else "S") + " ")})
+      println("")
+    })
+    println("")
+  }
 }

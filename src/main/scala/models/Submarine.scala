@@ -1,6 +1,5 @@
 package models
 
-class Submarine extends Ship {
-  val parts: Array[Shippart] = new Array[Shippart](3)
-    val shipform = Array[(Int, Int)]((0, 0), (1, 0), (2, 0));
-}
+import models.Direction.Direction
+
+class Submarine(shipform: List[(Int, Int)], x: Int, y: Int, d: Direction) extends Ship(shipform, x, y, d)

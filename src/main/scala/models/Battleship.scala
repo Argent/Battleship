@@ -1,6 +1,5 @@
 package models
 
-class Battleship extends Ship {
-  val parts: Array[models.Shippart] = new Array[Shippart](4)
-  val shipform = Array[(Int, Int)]((0, 0), (1, 0), (2, 0), (3, 0));
-}
+import models.Direction._
+
+class Battleship(shipform: List[(Int, Int)], x: Int, y: Int, d: Direction) extends Ship(shipform, x, y, d)

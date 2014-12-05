@@ -1,6 +1,7 @@
 package models
 
 class Board {
+
   val shots = Array.ofDim[Boolean](10, 10)
   val ships = Array.ofDim[Shippart](10, 10)
 
@@ -24,7 +25,12 @@ class Board {
     ships(y)(x) = s
     true
   }
-  
+
+  def unsetShippart(x: Int, y: Int) = {
+    ships(y)(x) = null
+  }
+
+
   /**
    * true -> Treffer, false -> kein Treffer, Null -> noch nicht geschossen
    */
