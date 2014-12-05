@@ -3,18 +3,25 @@ package models
 class Board {
   val shots = Array.ofDim[Boolean](10, 10)
   val ships = Array.ofDim[Shippart](10, 10)
-  
+
   def setShippart(x: Int, y: Int, s: Shippart): Boolean = {
     for(i <- -1 to 1) {
       for(j <- -1 to 1) {
-        if(x + i < 0 || y + j < 0 ||
-          (ships(x + i)(y + j) != null && ships(x + i)(y + j).ship != s.ship)) {
-          return false
+        val checkY = y + i
+        val checkX = x + j
+        if(x == 0 || y == 0 || x == 9 || y == 9) {
+          if(checkY >= 0 && checkY <= 9 && checkX >= 0 && checkY <= 9) {
+            if (ships(checkY)(checkX) != null && ships(checkY)(checkX).ship != s.ship)
+              return false
+          }
+        } else {
+          if(ships(checkY)(checkX) != null && ships(checkY)(checkX).ship != s.ship)
+            return false
         }
       }
     }
       
-    ships(x)(y) = s
+    ships(y)(x) = s
     true
   }
   

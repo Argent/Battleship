@@ -1,7 +1,6 @@
 package controller
 
-import models.AircraftCarrier
-import models.Direction
+import models.{ShipTypes, Ship, AircraftCarrier, Direction}
 
 
 class ConsoleSession extends Session {
@@ -9,19 +8,19 @@ class ConsoleSession extends Session {
 
 
 
-    val carrier = new AircraftCarrier()
+    val carrier = Ship.createShip(ShipTypes.AircraftCarrier)
 
-    val carrier2 = new AircraftCarrier()
+
 
 
 
 
     val b = boards(0)
-    val returnvalue1 = carrier.setOnBoard(5, 5, Direction.N)(b)
+    val returnvalue1 = carrier.setOnBoard(0, 0, Direction.E)(b)
     println(returnvalue1)
 
-    val returnvalue = carrier2.setOnBoard(4, 4, Direction.N)(b)
-    println(returnvalue)
+    /*val returnvalue = carrier2.setOnBoard(4, 4, Direction.S)(b)
+    println(returnvalue)*/
 
 
     b.ships.foreach(x => {

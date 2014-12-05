@@ -1,5 +1,6 @@
 package models
 
+import models.Direction.Direction
 import models.ShipTypes.ShipTypes
 
 
@@ -52,7 +53,7 @@ trait Ship {
     parts.filter(_.isDestroyed == false).length == 0
   }
   
-  def rotate(d: Direction.Value) = {
+  def rotate(d: Direction) = {
     d match {
       case Direction.N => shipform.map((x: (Int, Int)) => (x._2, x._1 * (-1)))
       case Direction.W => shipform.map((x: (Int, Int)) => (x._1 * (-1), x._2 * (-1)))
@@ -75,9 +76,10 @@ object Ship {
   }
 
   def generateShipSet(): List[Ship] = {
-    new AircraftCarrier()::new Battleship()::new Battleship::new Submarine()::
-      new Submarine()::new Submarine()::new PatrolBoat()::new PatrolBoat()::
-      new PatrolBoat()::new PatrolBoat()::Nil
+    createShip(ShipTypes.AircraftCarrier)::createShip(ShipTypes.Battleship)::createShip(ShipTypes.Battleship)::
+      createShip(ShipTypes.Submarine)::createShip(ShipTypes.Submarine)::createShip(ShipTypes.Submarine)::
+      createShip(ShipTypes.PatrolBoat)::createShip(ShipTypes.PatrolBoat)::createShip(ShipTypes.PatrolBoat)::
+      createShip(ShipTypes.PatrolBoat)::Nil
   }
 }
 
