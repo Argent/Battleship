@@ -40,8 +40,12 @@ object ConsoleHelper {
   }
 
   def printArray[T](a: Array[Array[T]]): Unit = {
-    println("0 1 2 3 4 5 6 7 8 9")
+    val yAxis = Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J')
+    var i = 0
+    println("  0 1 2 3 4 5 6 7 8 9")
     a.foreach(x => {
+      print(yAxis(i) + " ")
+      i += 1
       x.foreach(y => { print((if(y == null) "W" else "S") + " ")})
       println("")
     })
