@@ -8,8 +8,8 @@ trait Session {
   var players: Array[Player] = new Array[Player](2)
   var boards: Array[Board] = Array[Board](new Board(), new Board())
   
-  def initSession(ships: List[(ShipTypes, Int)], currentPlayer: Int)
-  def runSession(currentPlayer: Int)
+  def initSession(ships: List[(ShipTypes, Int)])
+  def runSession()
 
   def isWon: Option[Player] = {
     if(boards(0).ships.flatten.filter(_.isDestroyed != null).length == 0) {
@@ -22,5 +22,9 @@ trait Session {
   
   def nextPlayer() {
     currentPlayer = (currentPlayer + 1) % 2
+  }
+
+  def getOtherPlayer(): Int = {
+    (currentPlayer + 1) % 2
   }
 }

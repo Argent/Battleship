@@ -1,12 +1,23 @@
 package models
 
+import models.WaterTypes.WaterTypes
+
 class Board {
 
-  val shots = Array.ofDim[Boolean](10, 10)
+
+  val shots: Array[Array[WaterTypes]] = (for(i <- 0 to 9)
+    yield (for(j <- 0 to 9)
+      yield WaterTypes.Water).toArray).toArray
+
   val ships = Array.ofDim[Shippart](10, 10)
 
+
+
   def setShippart(x: Int, y: Int, s: Shippart): Boolean = {
-    if(x < 0 || y < 0 || x > 9 || y > 9) {
+
+
+
+if(x < 0 || y < 0 || x > 9 || y > 9) {
       return false
     }
     for(i <- -1 to 1) {
@@ -36,19 +47,20 @@ class Board {
     }
   }
 
-
-  /**
-   * true -> Treffer, false -> kein Treffer, Null -> noch nicht geschossen
-   */
   def shoot(x: Int, y: Int): Boolean = {
-    if(ships(x)(y) != null) {
-      ships(x)(y).isDestroyed = true
-      shots(x)(y) = true
+    if(ships(y)(x) != null) {
+      ships(y)(x).isDestroyed = true
+      //shots(y)(x) = WaterTypes.Hit
       true
     } else {
-      shots(x)(y) = false
+      //shots(y)(x) = WaterTypes.NoHit
       false
     }
   }
-  
+
+  def setShot(x: Int, y: Int, w: WaterTypes) = {
+    shots(y)(x) = w
+  }
+
+
 }
