@@ -9,7 +9,7 @@ trait Session {
   var boards: Array[Board] = Array[Board](new Board(), new Board())
   
   def initSession(ships: List[(ShipTypes, Int)], currentPlayer: Int)
-  def runSession()
+  def runSession(currentPlayer: Int)
 
   def isWon: Option[Player] = {
     if(boards(0).ships.flatten.filter(_.isDestroyed != null).length == 0) {

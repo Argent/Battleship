@@ -109,8 +109,8 @@ object Ship {
   }
 
   def generateShipSet(): List[(ShipTypes, Int)] = {
-    (ShipTypes.AircraftCarrier, 1)::(ShipTypes.Battleship, 1)::(ShipTypes.Destroyer, 1)::
-      (ShipTypes.Submarine, 1)::(ShipTypes.PatrolBoat, 1)::Nil
+    (ShipTypes.AircraftCarrier, 1)::/*(ShipTypes.Battleship, 1)::(ShipTypes.Destroyer, 1)::
+      (ShipTypes.Submarine, 1)::(ShipTypes.PatrolBoat, 1)::*/Nil
   }
 
   def rotateAndTranslate(d: Direction, shipform: List[(Int, Int)], x: Int, y: Int): List[(Int, Int)] = {

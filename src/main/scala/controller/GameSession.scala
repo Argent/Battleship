@@ -14,18 +14,21 @@ trait GameSession extends Session {
       players(1) = new AIPlayer()
     }
 
-    println("Wir setzen jetzt ein " + ships.head)
-    val shipCoords = ConsoleHelper.getCoordinatesFromConsole("Koordinaten in der Form Buchstabe Zahl Richtung eingeben: ")
-    val ship = Ship(ships.head._1, shipCoords._2, shipCoords._1, shipCoords._3)
+    println("Now setting " + ships.head)
+    players(currentPlayer).setShip(ships.head._1, boards(currentPlayer))
+    println("")
+    println("Board of: " + players(currentPlayer).getClass())
+    ConsoleHelper.printArray(boards(currentPlayer).ships)
 
-    ship.setOnBoard(ship.coords, Nil, boards(currentPlayer)) match {
-      case Some(b) => super.initSession(ships.tail, currentPlayer)
-      case None => {
-        println("Fehler beim Setzen, nochmal bitte")
-        super.initSession(ships, currentPlayer)
-      }
+    ships match {
+      case (s: ShipTypes, 1) :: Nil if currentPlayer == 1 => runSession(0)
+      case (s: ShipTypes, 1) :: Nil                       => initSession(Ship.generateShipSet(), 1)
+      case (s: ShipTypes, 1) :: xs                        => initSession(xs, currentPlayer)
+      case (s: ShipTypes, count: Int) :: xs               => initSession((s, count - 1) :: xs, currentPlayer)
     }
   }
 
-  override def runSession(): Unit = ???
+  override def runSession(currentPlayer: Int): Unit = {
+    println("GAME START")
+  }
 }
