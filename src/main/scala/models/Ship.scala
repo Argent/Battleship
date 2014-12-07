@@ -21,10 +21,11 @@ abstract case class Ship(shipform: List[(Int, Int)], x: Int, y: Int, d: Directio
       case Nil => Some(b)
       case x::xs => {
         parts = new Shippart(this) :: parts
+        println("Trying to set " + coords.head)
         if(b.setShippart(x._1, x._2, parts.head)) {
           setOnBoard(xs, x::setCoords, b)
         } else {
-          unsetShip(x::setCoords, b)
+          unsetShip(setCoords, b)
         }
       }
     }
@@ -34,7 +35,7 @@ abstract case class Ship(shipform: List[(Int, Int)], x: Int, y: Int, d: Directio
     setCoords match {
       case Nil => None
       case x::xs => {
-        b.unsetShippart(x._1, x._2)
+        b.unsetShippart(x._1, x._2, this)
         unsetShip(xs, b)
       }
     }
@@ -97,7 +98,7 @@ abstract case class Ship(shipform: List[(Int, Int)], x: Int, y: Int, d: Directio
 }
 
 object Ship {
-  def createShip(s: ShipTypes, x: Int, y: Int, d: Direction): Ship = {
+  def apply(s: ShipTypes, x: Int, y: Int, d: Direction): Ship = {
     s.construct(x, y, d)
 
 /*
@@ -107,12 +108,9 @@ object Ship {
     ship*/
   }
 
-  def generateShipSet(): List[Ship] = {
-   /* createShip(ShipTypes.AircraftCarrier)::createShip(ShipTypes.Battleship)::createShip(ShipTypes.Battleship)::
-      createShip(ShipTypes.Submarine)::createShip(ShipTypes.Submarine)::createShip(ShipTypes.Submarine)::
-      createShip(ShipTypes.PatrolBoat)::createShip(ShipTypes.PatrolBoat)::createShip(ShipTypes.PatrolBoat)::
-      createShip(ShipTypes.PatrolBoat)::Nil*/
-    ???
+  def generateShipSet(): List[(ShipTypes, Int)] = {
+    (ShipTypes.AircraftCarrier, 1)::(ShipTypes.Battleship, 1)::(ShipTypes.Destroyer, 1)::
+      (ShipTypes.Submarine, 1)::(ShipTypes.PatrolBoat, 1)::Nil
   }
 
   def rotateAndTranslate(d: Direction, shipform: List[(Int, Int)], x: Int, y: Int): List[(Int, Int)] = {

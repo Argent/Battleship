@@ -1,13 +1,14 @@
 package controller
 
 import models.Board
+import models.ShipTypes.ShipTypes
 
 trait Session {
   var currentPlayer: Int = 0
   var players: Array[Player] = new Array[Player](2)
   var boards: Array[Board] = Array[Board](new Board(), new Board())
   
-  def initSession()
+  def initSession(ships: List[(ShipTypes, Int)], currentPlayer: Int)
   def runSession()
 
   def isWon: Option[Player] = {
