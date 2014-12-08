@@ -1,8 +1,8 @@
 package controller
 
 import helper.ConsoleHelper
-import models.WaterTypes.WaterTypes
-import models.{Shippart, WaterTypes, Ship}
+import models.HitTypes.HitTypes
+import models.{HitTypes, Shippart, WaterTypes, Ship}
 import models.ShipTypes.ShipTypes
 import models.WaterTypes.WaterTypes
 
@@ -50,15 +50,19 @@ trait GameSession extends Session {
     val coords = players(currentPlayer).doTurn(boards(currentPlayer))
     val shootResult = boards(getOtherPlayer()).shoot(coords._1, coords._2)
 
-    if(shootResult) {
+    if(shootResult == HitTypes.Hit) {
       println(players(currentPlayer).getClass() + " - Schuss auf (" + coords._1 + ", " + coords._2 + "): Treffer!")
       println("Setting shot on  " + currentPlayer)
       boards(currentPlayer).setShot(coords._1, coords._2, WaterTypes.Hit)
-    } else {
+    } else if(shootResult == HitTypes.Miss) {
       println(players(currentPlayer).getClass() + " - Schuss auf (" + coords._1 + ", " + coords._2 + "): kein Treffer!")
       println("Setting shot on  " + currentPlayer)
       boards(currentPlayer).setShot(coords._1, coords._2, WaterTypes.NoHit)
       nextPlayer()
+    } else if(shootResult == HitTypes.HitAndSunk) {
+      println(players(currentPlayer).getClass() + " - Schuss auf (" + coords._1 + ", " + coords._2 + "): Treffer und versenkt!")
+      println("Setting shot on  " + currentPlayer)
+      boards(currentPlayer).setShot(coords._1, coords._2, WaterTypes.Hit)
     }
 
 

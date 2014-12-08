@@ -1,6 +1,7 @@
 package models
 
 import models.WaterTypes.WaterTypes
+import models.HitTypes.HitTypes
 
 class Board {
 
@@ -47,14 +48,16 @@ if(x < 0 || y < 0 || x > 9 || y > 9) {
     }
   }
 
-  def shoot(x: Int, y: Int): Boolean = {
+  def shoot(x: Int, y: Int): HitTypes = {
     if(ships(y)(x) != null) {
       ships(y)(x).isDestroyed = true
-      //shots(y)(x) = WaterTypes.Hit
-      true
+      if(ships(y)(x).ship.isDestroyed) {
+        HitTypes.HitAndSunk
+      } else {
+        HitTypes.Hit
+      }
     } else {
-      //shots(y)(x) = WaterTypes.NoHit
-      false
+      HitTypes.Miss
     }
   }
 
