@@ -1,1 +1,4 @@
 target
+.idea/misc.xml
+.idea/libraries/SBT__org_scala_lang_scala_library_2_11_4.xml
+.idea/modules/battleship.iml
