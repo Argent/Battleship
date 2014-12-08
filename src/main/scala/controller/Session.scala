@@ -1,6 +1,6 @@
 package controller
 
-import models.Board
+import models.{Shippart, Board}
 import models.ShipTypes.ShipTypes
 
 trait Session {
@@ -12,12 +12,13 @@ trait Session {
   def runSession()
 
   def isWon: Option[Player] = {
-    if(boards(0).ships.flatten.filter(_.isDestroyed != null).length == 0) {
-      Some(players(0))
-    } else if(boards(1).ships.flatten.filter(_.isDestroyed != null).length == 0) {
+    if(boards(0).ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
       Some(players(1))
+    } else if(boards(1).ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
+      Some(players(0))
+    } else {
+      None
     }
-    None
   }
   
   def nextPlayer() {

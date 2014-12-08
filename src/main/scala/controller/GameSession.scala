@@ -50,17 +50,19 @@ trait GameSession extends Session {
     val coords = players(currentPlayer).doTurn(boards(currentPlayer))
     val shootResult = boards(getOtherPlayer()).shoot(coords._1, coords._2)
 
-    if(shootResult == HitTypes.Hit) {
+    if (shootResult == HitTypes.Hit) {
       println(players(currentPlayer).getClass() + " - Schuss auf (" + coords._1 + ", " + coords._2 + "): Treffer!")
       println("Setting shot on  " + currentPlayer)
       boards(currentPlayer).setShot(coords._1, coords._2, WaterTypes.Hit)
-    } else if(shootResult == HitTypes.Miss) {
+    } else if (shootResult == HitTypes.Miss) {
       println(players(currentPlayer).getClass() + " - Schuss auf (" + coords._1 + ", " + coords._2 + "): kein Treffer!")
       println("Setting shot on  " + currentPlayer)
       boards(currentPlayer).setShot(coords._1, coords._2, WaterTypes.NoHit)
       nextPlayer()
-    } else if(shootResult == HitTypes.HitAndSunk) {
+    } else if (shootResult == HitTypes.HitAndSunk) {
       println(players(currentPlayer).getClass() + " - Schuss auf (" + coords._1 + ", " + coords._2 + "): Treffer und versenkt!")
+      println("Versenkt wurde: " + boards(getOtherPlayer()).getShipAtCoordinates(coords._1, coords._2))
+      println()
       println("Setting shot on  " + currentPlayer)
       boards(currentPlayer).setShot(coords._1, coords._2, WaterTypes.Hit)
     }
@@ -69,9 +71,9 @@ trait GameSession extends Session {
     println("Player 1 Board")
     ConsoleHelper.printArray(boards(0).shots,
       (x: WaterTypes) =>
-        if(x == WaterTypes.Water)
+        if (x == WaterTypes.Water)
           "_"
-        else if(x == WaterTypes.Hit)
+        else if (x == WaterTypes.Hit)
           "X"
         else
           "O"
@@ -80,14 +82,17 @@ trait GameSession extends Session {
     println("Player 2 Board")
     ConsoleHelper.printArray(boards(1).shots,
       (x: WaterTypes) =>
-        if(x == WaterTypes.Water)
+        if (x == WaterTypes.Water)
           "_"
-        else if(x == WaterTypes.Hit)
+        else if (x == WaterTypes.Hit)
           "X"
         else
           "O"
     )
 
-    runSession()
+    isWon match {
+      case None => runSession()
+      case Some(s: Player) => println("Spieler " + s.getClass() + " hat gewonnen!")
+    }
   }
 }

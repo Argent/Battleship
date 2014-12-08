@@ -65,5 +65,9 @@ if(x < 0 || y < 0 || x > 9 || y > 9) {
     shots(y)(x) = w
   }
 
+  def getShipAtCoordinates(x: Int, y: Int): Ship = {
+    return ships(y)(x).ship
+  }
+
 
 }
