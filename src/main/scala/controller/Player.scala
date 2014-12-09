@@ -1,10 +1,9 @@
 package controller
 
-import models.Board
-import models.ShipTypes.ShipTypes
+import models.{Ship, Board}
 
 trait Player {
-  def setShip(s: ShipTypes, b: Board)
+  def setShip(s: Ship, b: Board)
   def doTurn(b: Board): (Int, Int)
 
 }

@@ -1,12 +1,10 @@
 package controller
 
-import helper.ConsoleHelper
-import models.ShipTypes.ShipTypes
-import models.{ShipTypes, Ship, AircraftCarrier, Direction}
+import models.Ship
 
 
 class ConsoleSession extends Session {
-  override def initSession(ships: List[(ShipTypes, Int)]): Unit = {
+  override def initSession(ships: List[Ship]): Unit = {
 
   }
 

@@ -1,7 +1,7 @@
 package models
 
 import models.Direction.Direction
-
+/*
 
 object ShipTypes extends Enumeration {
   type ShipTypes = Value
@@ -29,4 +29,4 @@ object ShipTypes extends Enumeration {
     new Submarine(List((0, 0), (1, 0), (2, 0)), x, y, d)
   )
 
-}
+}*/

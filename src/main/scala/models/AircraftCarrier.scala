@@ -1,5 +1,3 @@
 package models
 
-import models.Direction._
-
-class AircraftCarrier(shipform: List[(Int, Int)], x: Int, y: Int, d: Direction) extends Ship(shipform, x, y, d)
+class AircraftCarrier() extends Ship(List((0, 0), (1, 0), (2, 0), (3, 0), (4, 0)))

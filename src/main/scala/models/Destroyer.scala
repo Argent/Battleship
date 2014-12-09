@@ -1,5 +1,4 @@
 package models
 
-import models.Direction.Direction
 
-class Destroyer(shipform: List[(Int, Int)], x: Int, y: Int, d: Direction) extends Ship(shipform, x, y, d)
+class Destroyer() extends Ship(List((0, 0), (1, 0), (2, 0)))

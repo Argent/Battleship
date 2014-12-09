@@ -10,7 +10,6 @@ object CharacterCoordinate {
     ("E", 4), ("F", 5), ("G", 6), ("H", 7), ("I", 8), ("J", 9))
 
   def apply(s: String) = {
-    println("Constructing CC " + s)
     require(translator.map(_._1).toList.contains(s), "only characters from A-J are valid CharacterCoordinates")
     new CharacterCoordinate(s)
   }

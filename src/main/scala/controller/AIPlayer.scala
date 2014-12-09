@@ -2,27 +2,26 @@ package controller
 
 import helper.ConsoleHelper
 import models.{WaterTypes, Direction, Ship, Board}
-import models.ShipTypes.ShipTypes
 
 import scala.util.Random
 
 class AIPlayer extends Player {
   val random = new Random()
 
-  override def setShip(s: ShipTypes, b: Board): Unit = {
+  override def setShip(s: Ship, b: Board): Unit = {
 
     val xCoord = random.nextInt(10)
     val yCoord = random.nextInt(10)
     val direction = random.nextInt(4)
 
-    val ship = Ship(s, xCoord, yCoord, direction match {
+    s.translateAndRotate(xCoord, yCoord, direction match {
       case 0 => Direction.E
       case 1 => Direction.N
       case 2 => Direction.S
       case 3 => Direction.W
     })
 
-    if (ship.setOnBoard(ship.coords, Nil, b) == None) {
+    if (s.setOnBoard(s.coords, Nil, b) == None) {
       println("Fehler beim Setzen. Um Schiffe muss ein Abstand von einem Kästchen bestehen.")
       setShip(s, b)
     }

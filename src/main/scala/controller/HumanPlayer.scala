@@ -2,17 +2,15 @@ package controller
 
 import helper.ConsoleHelper
 import models.{WaterTypes, Board, Ship}
-import models.ShipTypes.ShipTypes
 
 
 class HumanPlayer extends Player {
-  override def setShip(s: ShipTypes, b: Board): Unit = {
+  override def setShip(s: Ship, b: Board): Unit = {
 
     val shipCoords = ConsoleHelper.getShipCoordinatesFromConsole("Position in der Form Buchstabe Zahl Richtung eingeben: ")
-    val ship = Ship(s, shipCoords._2, shipCoords._1, shipCoords._3)
+    s.translateAndRotate(shipCoords._2, shipCoords._2, shipCoords._3)
 
-
-    if(ship.setOnBoard(ship.coords, Nil, b) == None) {
+    if(s.setOnBoard(s.coords, Nil, b) == None) {
       println("Fehler beim Setzen. Um Schiffe muss ein Abstand von einem Kästchen bestehen.")
       setShip(s, b)
     }

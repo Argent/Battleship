@@ -1,15 +1,13 @@
 package controller
 
 import helper.ConsoleHelper
-import models.HitTypes.HitTypes
 import models.{HitTypes, Shippart, WaterTypes, Ship}
-import models.ShipTypes.ShipTypes
 import models.WaterTypes.WaterTypes
 
 
 trait GameSession extends Session {
 
-  abstract override def initSession(ships: List[(ShipTypes, Int)]): Unit = {
+  abstract override def initSession(ships: List[Ship]): Unit = {
 
     if(players(0) == null) {
       players(0) = new HumanPlayer()
@@ -17,7 +15,7 @@ trait GameSession extends Session {
     }
 
     println("Now setting " + ships.head)
-    players(currentPlayer).setShip(ships.head._1, boards(currentPlayer))
+    players(currentPlayer).setShip(ships.head, boards(currentPlayer))
     println("")
     println("Board of: " + players(currentPlayer).getClass())
     ConsoleHelper.printArray(boards(currentPlayer).ships,
@@ -29,16 +27,19 @@ trait GameSession extends Session {
     )
 
     ships match {
-      case (s: ShipTypes, 1) :: Nil if currentPlayer == 1 => {
+      case x :: Nil if currentPlayer == 1 => {
         nextPlayer()
         runSession()
       }
-      case (s: ShipTypes, 1) :: Nil => {
+
+      case x :: Nil => {
         nextPlayer()
-        initSession(Ship.generateShipSet())
+        initSession(Session.generateShipSet())
       }
-      case (s: ShipTypes, 1) :: xs => initSession(xs)
-      case (s: ShipTypes, count: Int) :: xs => initSession((s, count - 1) :: xs)
+
+      case x :: xs => {
+        initSession(xs)
+      }
     }
   }
 
