@@ -58,5 +58,17 @@ class Board {
     ships(y)(x).ship
   }
 
+  override def toString(): String ={
+  /* ships.flatten.collect { part => part match {
+     case null => yield 's'
+   }}*/
+
+    var stringBoard = ""
+    ships.flatten.foreach{ part => part match {
+      case null => stringBoard += "."
+      case _ => if (part.isDestroyed) { stringBoard += "X" } else  {stringBoard += "O"}
+    }}
+    stringBoard
+  }
 
 }

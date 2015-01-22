@@ -8,7 +8,7 @@ import models.{Shippart, Board}
 object Game {
   var players: Array[Option[Int]] = Array(None, None)
   var currentPlayer: Int = 0
-  var boards: Map[Int, Board] = Map()
+  var boards: scala.collection.mutable.Map[Int, Board] = scala.collection.mutable.Map()
 
 
   def isWon: Option[Int] = {
