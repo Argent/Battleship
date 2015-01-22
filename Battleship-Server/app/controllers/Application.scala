@@ -5,6 +5,8 @@ import play.api.libs.json.{JsUndefined, JsValue}
 import play.api.mvc._
 import shared.Game
 
+import scala.util.parsing.json.JSONObject
+
 object Application extends Controller {
 
   case class ShipPlacement(userid: Int, x :String, y :String, direction :String, shiptype :String)
@@ -80,7 +82,13 @@ object Application extends Controller {
     val board = Game.boards.get(placement.userid)
 
     if (board.isInstanceOf[Some[Board]] && ship.isInstanceOf[Some[Ship]] && setShip(ship.get,board.get,placement.x,placement.y,placement.direction)){
-        Ok("{\"map\": \"" + board.get.toString + "\"}")
+      println("New Board:")
+      board.get.printArray((x: Shippart) =>
+        if(x == null)
+          "W"
+        else
+          "S")
+      Ok(new JSONObject(Map[String, Any]("map" -> board.get.toString())).toString())
     }else {
       BadRequest("could not parse input data")
     }
@@ -96,7 +104,7 @@ object Application extends Controller {
         case "S" => Direction.S
         case "W" => Direction.W
       })
-    s.translateAndRotate(shipCoords._2, shipCoords._2, shipCoords._3)
+    s.translateAndRotate(shipCoords._2, shipCoords._1, shipCoords._3)
 
     if (s.setOnBoard(s.coords, Nil, b) == None) {
       println("Fehler beim Setzen. Um Schiffe muss ein Abstand von einem Kästchen bestehen.")
@@ -115,12 +123,20 @@ object Application extends Controller {
     val shot = new Shot(request.body.\("userid").as[Int], request.body.\("x").as[String], request.body.\("y").as[String])
     //TODO: check if current player
     val board = Game.boards.get(Game.players(Game.getOtherPlayer()).get)
-    if (board.isInstanceOf[Some[Board]] && {shot.x forall Character.isDigit} && shot.y.length == 1 && shot.y.toCharArray()(0) >= 65 && shot.y.toCharArray()(0) <= 74){
-      val hit = board.get.shoot(Integer.parseInt(shot.x), shot.y.toCharArray()(0) - 65)
-      hit match {
-        case HitTypes.Miss => Game.nextPlayer()
+    val y = CharacterCoordinate(shot.y)
+    val x = Integer.parseInt(shot.x)
+    if (board.isInstanceOf[Some[Board]] && x >= 0 && x <= 10){
+
+      val hit = board.get.shoot(x, y)
+      var json = Map[String, Any]("type" -> hit, "won" -> Game.isWon)
+      val part = board.get.ships(y)(x)
+      if (hit == HitTypes.Miss){
+        Game.nextPlayer()
+      }else if (hit == HitTypes.HitAndSunk){
+        json += "shiptype" -> part.ship.getName
       }
-      Ok("{\"hittype\": \"" + hit + "\"")
+
+      Ok(new JSONObject(json).toString())
     }else {
       BadRequest("could not parse input data")
     }

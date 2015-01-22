@@ -11,6 +11,10 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
     "Hi, I'm a " + this.getClass() + "! My coords are: " + coords.toString
   }
 
+  def getName :String = {
+    this.getClass().toString.replaceAll("class models.", "")
+  }
+
   def translateAndRotate(x: Int, y: Int, d: Direction) {
     println("Direction: " + d)
     println("(" + x + ", " + y + ")")

@@ -71,4 +71,17 @@ class Board {
     stringBoard
   }
 
+  def printArray(printTile: Shippart => String): Unit = {
+    val yAxis = Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J')
+    var i = 0
+    println("  0 1 2 3 4 5 6 7 8 9")
+    ships.foreach(x => {
+      print(yAxis(i) + " ")
+      i += 1
+      x.foreach(y => { print(printTile(y) + " ")})
+      println("")
+    })
+    println("")
+  }
+
 }
