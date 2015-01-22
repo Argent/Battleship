@@ -1,6 +1,6 @@
 package shared
 
-import models.{Shippart, Board}
+import models.{Ship, AircraftCarrier, Shippart, Board}
 
 /**
  * Created by Basti on 15.01.15.
@@ -10,6 +10,11 @@ object Game {
   var currentPlayer: Int = 0
   var boards: scala.collection.mutable.Map[Int, Board] = scala.collection.mutable.Map()
 
+  def generateShipSet(): Map[Ship, Int] = {
+    Map(new AircraftCarrier() -> 1 /*new Battleship()::new Battleship()::new Destroyer()::new Destroyer()::
+      new Destroyer()::new Submarine()::new Submarine()::new Submarine()::new Submarine()::
+      new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::Nil*/)
+  }
 
   def isWon: Option[Int] = {
 

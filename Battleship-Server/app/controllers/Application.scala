@@ -1,11 +1,11 @@
 package controllers
 
 import models._
-import play.api.libs.json.{JsUndefined, JsValue}
+import play.api.libs.json._
 import play.api.mvc._
 import shared.Game
 
-import scala.util.parsing.json.JSONObject
+import scala.util.parsing.json.{JSONArray, JSONObject}
 
 object Application extends Controller {
 
@@ -39,7 +39,11 @@ object Application extends Controller {
         if (Game.players(0) == None){
           Game.players(0) = userid
           Game.boards.put(userid.get, new Board())
-          Ok(userid + " has been registered")
+
+          var shipList = List[JSONObject]()
+          Game.generateShipSet().foreach{x => shipList = shipList ::: new JSONObject(Map("name" -> x._1.getName, "form" -> x._1.formToJson, "number" -> x._2)) :: Nil}
+
+          Ok(new JSONObject(Map("ships" -> JSONArray(shipList))).toString())
         }else if (Game.players(1) == None){
           if (Game.players(0).get == userid.get){
             Conflict("userid " + userid + " already registerd")

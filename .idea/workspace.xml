@@ -3,7 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="1e4b114d-5b13-49aa-a6a0-d2b7bb3520e2" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Battleship-Server/app/controllers/Application.scala" afterPath="$PROJECT_DIR$/Battleship-Server/app/controllers/Application.scala" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Battleship-Server/app/models/Board.scala" afterPath="$PROJECT_DIR$/Battleship-Server/app/models/Board.scala" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Battleship-Server/app/shared/Game.scala" afterPath="$PROJECT_DIR$/Battleship-Server/app/shared/Game.scala" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Battleship-Server/app/models/Ship.scala" afterPath="$PROJECT_DIR$/Battleship-Server/app/models/Ship.scala" />
     </list>
     <ignored path="SchiffeVersenken.iws" />
@@ -36,11 +36,10 @@
       <file leaf-file-name="Application.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Battleship-Server/app/controllers/Application.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0" vertical-offset="603" max-vertical-offset="2400">
-              <caret line="44" column="33" selection-start-line="44" selection-start-column="33" selection-end-line="44" selection-end-column="33" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="1859" max-vertical-offset="2464">
+              <caret line="67" column="23" selection-start-line="67" selection-start-column="23" selection-end-line="67" selection-end-column="23" />
               <folding>
                 <element signature="e#21#36#0" expanded="true" />
-                <marker date="1421933223000" expanded="true" signature="4627:4681" placeholder="{...}" />
               </folding>
             </state>
           </provider>
@@ -56,11 +55,21 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="GameSession.scala" pinned="false" current-in-tab="true">
+      <file leaf-file-name="GameSession.scala" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Battleship-Client/src/main/scala/controller/GameSession.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.846281" vertical-offset="416" max-vertical-offset="1632">
-              <caret line="60" column="75" selection-start-line="60" selection-start-column="75" selection-end-line="60" selection-end-column="75" />
+            <state vertical-scroll-proportion="0.0" vertical-offset="563" max-vertical-offset="1632">
+              <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Session.scala" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Battleship-Client/src/main/scala/controller/Session.scala">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="0.23801653" vertical-offset="0" max-vertical-offset="688">
+              <caret line="9" column="36" selection-start-line="9" selection-start-column="36" selection-end-line="9" selection-end-column="36" />
               <folding />
             </state>
           </provider>
@@ -512,6 +521,40 @@
             <PATH_ELEMENT>
               <option name="myItemId" value="helper" />
               <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+          </PATH>
+          <PATH>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SchiffeVersenken" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.ProjectViewProjectNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="SchiffeVersenken" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Battleship-Client" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="src" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="main" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="scala" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="controller" />
+              <option name="myItemType" value="com.intellij.ide.projectView.impl.nodes.PsiDirectoryNode" />
+            </PATH_ELEMENT>
+            <PATH_ELEMENT>
+              <option name="myItemId" value="Session.scala" />
+              <option name="myItemType" value="org.jetbrains.plugins.scala.components.ScalaDefsProjectViewProvider$ScalaFileTreeNode" />
             </PATH_ELEMENT>
           </PATH>
           <PATH>
@@ -997,12 +1040,12 @@
       <workItem from="1418049268909" duration="4099000" />
       <workItem from="1421580614356" duration="735000" />
       <workItem from="1421581466559" duration="478000" />
-      <workItem from="1421584169989" duration="6387000" />
+      <workItem from="1421584169989" duration="7751000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="59240000" />
+    <option name="totallyTimeSpent" value="60604000" />
   </component>
   <component name="TodoView" selected-index="0">
     <todo-panel id="selected-file">
@@ -1102,14 +1145,11 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Battleship-Server/app/controllers/Application.scala">
+    <entry file="file://$PROJECT_DIR$/Battleship-Client/src/main/scala/helper/ConsoleHelper.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="603" max-vertical-offset="2384">
-          <caret line="44" column="33" selection-start-line="44" selection-start-column="33" selection-end-line="44" selection-end-column="33" />
-          <folding>
-            <element signature="e#21#36#0" expanded="true" />
-            <marker date="1421933223000" expanded="true" signature="4627:4681" placeholder="{...}" />
-          </folding>
+        <state vertical-scroll-proportion="0.0" vertical-offset="32" max-vertical-offset="912">
+          <caret line="33" column="53" selection-start-line="33" selection-start-column="53" selection-end-line="33" selection-end-column="53" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -1121,18 +1161,28 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Battleship-Client/src/main/scala/helper/ConsoleHelper.scala">
+    <entry file="file://$PROJECT_DIR$/Battleship-Server/app/controllers/Application.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.0" vertical-offset="32" max-vertical-offset="912">
-          <caret line="33" column="53" selection-start-line="33" selection-start-column="53" selection-end-line="33" selection-end-column="53" />
-          <folding />
+        <state vertical-scroll-proportion="0.0" vertical-offset="1859" max-vertical-offset="2464">
+          <caret line="67" column="23" selection-start-line="67" selection-start-column="23" selection-end-line="67" selection-end-column="23" />
+          <folding>
+            <element signature="e#21#36#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Battleship-Client/src/main/scala/controller/GameSession.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.846281" vertical-offset="416" max-vertical-offset="1632">
-          <caret line="60" column="75" selection-start-line="60" selection-start-column="75" selection-end-line="60" selection-end-column="75" />
+        <state vertical-scroll-proportion="0.0" vertical-offset="416" max-vertical-offset="1632">
+          <caret line="44" column="0" selection-start-line="44" selection-start-column="0" selection-end-line="44" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Battleship-Client/src/main/scala/controller/Session.scala">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.23801653" vertical-offset="0" max-vertical-offset="688">
+          <caret line="9" column="36" selection-start-line="9" selection-start-column="36" selection-end-line="9" selection-end-column="36" />
           <folding />
         </state>
       </provider>
