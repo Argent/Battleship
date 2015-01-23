@@ -2,6 +2,8 @@ package models
 
 import models.Direction.Direction
 
+import scala.util.parsing.json.JSONArray
+
 
 abstract case class Ship(var coords: List[(Int, Int)]) {
   var parts: List[Shippart] = Nil
@@ -13,6 +15,20 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
 
   def getName :String = {
     this.getClass().toString.replaceAll("class models.", "")
+  }
+
+  def formToArray :List[List[Int]] = {
+    var retList = List[List[Int]]()
+    coords foreach{ x :(Int, Int) => retList = retList ::: List(x._1, x._2) :: Nil}
+
+    retList
+  }
+
+  def formToJson :JSONArray = {
+    var retList = List[JSONArray]()
+    coords foreach{ x :(Int, Int) => retList = retList ::: JSONArray(List(x._1, x._2)) :: Nil}
+
+    return JSONArray(retList)
   }
 
   def translateAndRotate(x: Int, y: Int, d: Direction) {
