@@ -1,46 +1,130 @@
 package controller
 
+import java.net.URL
+
 import helper.ConsoleHelper
-import models.{HitTypes, Shippart, WaterTypes, Ship}
 import models.WaterTypes.WaterTypes
+import scala.util.parsing.json.JSONObject
+import models.{HitTypes, Ship}
+import models.WaterTypes
+import uk.co.bigbeeconsultants.http.HttpClient
+import uk.co.bigbeeconsultants.http.request.RequestBody
+import uk.co.bigbeeconsultants.http.header.MediaType._
+
 
 
 trait GameSession extends Session {
 
   abstract override def initSession(ships: List[Ship]): Unit = {
 
-    if(players(0) == null) {
-      players(0) = new HumanPlayer()
-      players(1) = new AIPlayer()
-    }
-
-    println("Now setting " + ships.head)
-    players(currentPlayer).setShip(ships.head, boards(currentPlayer))
-    println("")
-    println("Board of: " + players(currentPlayer).getClass())
-    ConsoleHelper.printArray(boards(currentPlayer).ships,
-      (x: Shippart) =>
-        if(x == null)
-          "W"
-        else
-          "S"
+    val urls = Map(
+      "register" -> new URL("http://localhost:9000/register"),
+      "setship"  -> new URL("http://localhost:9000/place"),
+      "poll"     -> new URL("http://localhost:9000/opponent"),
+      "shoot"    -> new URL("http://localhost:9000/shoot")
     )
 
-    ships match {
-      case x :: Nil if currentPlayer == 1 => {
-        nextPlayer()
-        runSession()
-      }
+    val url = "http://localhost:9000/register"
 
-      case x :: Nil => {
-        nextPlayer()
-        initSession(Session.generateShipSet())
-      }
+    val random = scala.util.Random
+    val id = random.nextInt(1000)
 
-      case x :: xs => {
-        initSession(xs)
-      }
-    }
+
+    val requestBody = RequestBody(new JSONObject(Map("userid" -> id)).toString(),
+      APPLICATION_JSON)
+
+    val httpClient = new HttpClient
+
+    val response = httpClient.post(urls.get("register").get, Some(requestBody))
+    println(response.status)
+    println(response.body)
+
+
+   val requestBody2 = RequestBody(new JSONObject(
+       Map(
+         "userid" -> id,
+         "shiptype" -> "Battleship",
+         "x" -> "0",
+         "y" -> "A",
+         "direction" -> "E"
+       )
+      ).toString(),
+      APPLICATION_JSON)
+
+    val response2 = httpClient.post(urls.get("setship").get, Some(requestBody2))
+    println(response2.status)
+    println(response2.body)
+
+
+    val response4 = httpClient.get(urls.get("poll").get)
+    println(response4.status)
+    println(response4.body)
+
+
+    val requestBody3 = RequestBody(new JSONObject(
+        Map(
+          "userid" -> id,
+          "x" -> "0",
+          "y" -> "A"
+        )).toString(),
+      APPLICATION_JSON
+    )
+
+    val response3 = httpClient.put(urls.get("shoot").get, requestBody3)
+    println(response3.status)
+    println(response3.body)
+
+
+    /*val requestBody2 = RequestBody(new JSONObject(
+      Map(
+        "userid" -> id,
+        "shiptype" -> "Battleship",
+        "x" -> "0",
+        "y" -> "A",
+        "direction" -> "E"
+      )
+    ).toString(),
+      APPLICATION_JSON)
+
+    val response2 = httpClient.post(urls.get("setship").get, Some(requestBody2))
+    println(response2.status)
+    println(response2.body)*/
+
+
+
+    /*
+        if(players(0) == null) {
+          players(0) = new HumanPlayer()
+          players(1) = new AIPlayer()
+        }
+
+        println("Now setting " + ships.head)
+        players(currentPlayer).setShip(ships.head, boards(currentPlayer))
+        println("")
+        println("Board of: " + players(currentPlayer).getClass())
+        ConsoleHelper.printArray(boards(currentPlayer).ships,
+          (x: Shippart) =>
+            if(x == null)
+              "W"
+            else
+              "S"
+        )
+
+        ships match {
+          case x :: Nil if currentPlayer == 1 => {
+            nextPlayer()
+            runSession()
+          }
+
+          case x :: Nil => {
+            nextPlayer()
+            initSession(Session.generateShipSet())
+          }
+
+          case x :: xs => {
+            initSession(xs)
+          }
+        }*/
   }
 
   override def runSession(): Unit = {
