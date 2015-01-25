@@ -7,8 +7,9 @@ import models.{Ship, AircraftCarrier, Shippart, Board}
  */
 object Game {
   var players: Array[Option[Int]] = Array(None, None)
+  val unplacedShips :scala.collection.mutable.Map[Int, List[Ship]] = scala.collection.mutable.Map()
   var currentPlayer: Int = 0
-  var boards: scala.collection.mutable.Map[Int, Board] = scala.collection.mutable.Map()
+  val boards: scala.collection.mutable.Map[Int, Board] = scala.collection.mutable.Map()
 
   def generateShipSet(): Map[Ship, Int] = {
     Map(new AircraftCarrier() -> 1 /*new Battleship()::new Battleship()::new Destroyer()::new Destroyer()::
@@ -16,11 +17,26 @@ object Game {
       new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::Nil*/)
   }
 
+  def gameStarted: Boolean = {
+    return players.filter(_ == None).length == 0 && unplacedShips.values.flatten.toList.length == 0
+  }
+
+  def matchUserId(userId :Int): Option[Int] = {
+    return players.indexOf(Some(userId)) match {
+      case x if x >= 0 => Some(x)
+      case _ => None
+    }
+  }
+
+  def shipAvailable(userId :Int, ship :Ship): Boolean = {
+    return unplacedShips.get(userId).get.filter(s => s.getClass.equals(ship.getClass)).length > 0
+  }
+
   def isWon: Option[Int] = {
 
-    // TODO: checken, ob beide Spieler gesetzt sind
-
-    if(boards.get(players(0).get).get.ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
+    if(!gameStarted) {
+      None
+    } else if(boards.get(players(0).get).get.ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
       players(0)
     } else if(boards.get(players(1).get).get.ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
       players(1)

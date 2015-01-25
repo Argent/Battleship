@@ -36,26 +36,25 @@ object Application extends Controller {
       case e: JsUndefined => BadRequest("must supply userid")
       case e: JsValue => {
         val userid = request.body.\("userid").asOpt[Int]
-        if (Game.players(0) == None){
-          Game.players(0) = userid
-          Game.boards.put(userid.get, new Board())
+        val newPlayerIndex = if (Game.players(0) == None) { 0 } else if (Game.players(1) == None) { 1 } else None
 
-          var shipList = List[JSONObject]()
-          Game.generateShipSet().foreach{x => shipList = shipList ::: new JSONObject(Map("name" -> x._1.getName, "form" -> x._1.formToJson, "number" -> x._2)) :: Nil}
-
-          Ok(new JSONObject(Map("ships" -> JSONArray(shipList))).toString())
-        }else if (Game.players(1) == None){
-          if (Game.players(0).get == userid.get){
-            Conflict("userid " + userid + " already registerd")
+        if (newPlayerIndex != None){
+          if (newPlayerIndex == 1 && Game.players(0).get == userid){
+            Conflict("userid " + userid + " already registered")
           }else {
-            Game.players(1) = userid
+            Game.players(newPlayerIndex.asInstanceOf[Int]) = userid
             Game.boards.put(userid.get, new Board())
-            Ok(userid + " has been registered")
+
+            var shipList = List[JSONObject]()
+            val shipSet = Game.generateShipSet()
+            Game.unplacedShips.put(userid.get, shipSet.map {case (k,v) => List.fill(v)(k)}.flatten.toList)
+            shipSet.foreach{x => shipList = shipList ::: new JSONObject(Map("name" -> x._1.getName, "form" -> x._1.formToJson, "number" -> x._2)) :: Nil}
+
+            Ok(new JSONObject(Map("ships" -> JSONArray(shipList), "userid" -> userid.get)).toString())
           }
         }else {
-           Conflict("2 players are already registered")
+          Conflict("2 players are already registered")
         }
-
       }
     }
   }
@@ -85,17 +84,32 @@ object Application extends Controller {
 
     val board = Game.boards.get(placement.userid)
 
-    if (board.isInstanceOf[Some[Board]] && ship.isInstanceOf[Some[Ship]] && setShip(ship.get,board.get,placement.x,placement.y,placement.direction)){
-      println("New Board:")
-      board.get.printArray((x: Shippart) =>
-        if(x == null)
-          "W"
-        else
-          "S")
-      Ok(new JSONObject(Map[String, Any]("map" -> board.get.toString())).toString())
+    if (board.isInstanceOf[Some[Board]] && ship.isInstanceOf[Some[Ship]]){
+      if (Game.shipAvailable(placement.userid, ship.get)){
+        if (setShip(ship.get,board.get,placement.x,placement.y,placement.direction)) {
+          println("New Board:")
+          board.get.printArray((x: Shippart) =>
+            if (x == null)
+              "W"
+            else
+              "S")
+
+          Game.unplacedShips.put(placement.userid, removeFirst(Game.unplacedShips.get(placement.userid).get) {_.getClass.equals(ship.get.getClass)})
+          Ok(new JSONObject(Map[String, Any]("map" -> board.get.toString())).toString())
+        }else {
+          BadRequest("Could not set ship at these coordinates")
+        }
+      }else {
+        Conflict("No ships of type " + ship.get.getName + " availabe")
+      }
     }else {
-      BadRequest("could not parse input data")
+      BadRequest("Could not parse input data")
     }
+  }
+
+  def removeFirst[T](list: List[T])(pred: (T) => Boolean): List[T] = {
+       val (before, atAndAfter) = list span (x => !pred(x))
+       before ::: atAndAfter.drop(1)
   }
 
   def setShip(s: Ship, b: Board, x: String, y: String, direction: String): Boolean = {
@@ -118,31 +132,57 @@ object Application extends Controller {
     }
   }
 
-  def checkForOpponent = Action {
-    Ok("hi")
+  def checkForOpponent = Action(parse.json) { implicit request =>
+
+    //TODO: check if both players set their ships
+    request.body\("userid") match {
+      case e: JsUndefined => BadRequest("must supply userid")
+      case e: JsValue => {
+        val userIndex = Game.matchUserId(request.body.\("userid").asOpt[Int].get)
+        if (userIndex == None){
+          BadRequest("userId not found")
+        }else if (!Game.gameStarted){
+          NotFound("game has not started yet")
+        }else {
+          if (Game.currentPlayer == userIndex.get){
+            Ok("it's your turn")
+          }else {
+            NotFound("it's not your turn yet")
+          }
+        }
+      }
+    }
   }
 
   def shoot = Action(parse.json) { implicit request =>
 
     val shot = new Shot(request.body.\("userid").as[Int], request.body.\("x").as[String], request.body.\("y").as[String])
-    //TODO: check if current player
-    val board = Game.boards.get(Game.players(Game.getOtherPlayer()).get)
-    val y = CharacterCoordinate(shot.y)
-    val x = Integer.parseInt(shot.x)
-    if (board.isInstanceOf[Some[Board]] && x >= 0 && x <= 10){
-
-      val hit = board.get.shoot(x, y)
-      var json = Map[String, Any]("type" -> hit, "won" -> Game.isWon)
-      val part = board.get.ships(y)(x)
-      if (hit == HitTypes.Miss){
-        Game.nextPlayer()
-      }else if (hit == HitTypes.HitAndSunk){
-        json += "shiptype" -> part.ship.getName
-      }
-
-      Ok(new JSONObject(json).toString())
+    val userIndex = Game.matchUserId(shot.userid)
+    if (userIndex == None) {
+      BadRequest("userId not found")
+    }else if (!Game.gameStarted) {
+      NotFound("game has not started yet")
+    }else if (Game.currentPlayer != userIndex.get){
+      NotFound("it's not your turn yet")
     }else {
-      BadRequest("could not parse input data")
+      val board = Game.boards.get(Game.players(Game.getOtherPlayer()).get)
+      val y = CharacterCoordinate(shot.y)
+      val x = Integer.parseInt(shot.x)
+      if (board.isInstanceOf[Some[Board]] && x >= 0 && x <= 10) {
+
+        val hit = board.get.shoot(x, y)
+        var json = Map[String, Any]("type" -> hit, "won" -> Game.isWon)
+        val part = board.get.ships(y)(x)
+        if (hit == HitTypes.Miss) {
+          Game.nextPlayer()
+        } else if (hit == HitTypes.HitAndSunk) {
+          json += "shiptype" -> part.ship.getName
+        }
+
+        Ok(new JSONObject(json).toString())
+      } else {
+        BadRequest("could not parse input data")
+      }
     }
   }
 

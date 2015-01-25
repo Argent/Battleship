@@ -14,7 +14,7 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
   }
 
   def getName :String = {
-    this.getClass().toString.replaceAll("class models.", "")
+    return this.getClass.getSimpleName
   }
 
   def formToArray :List[List[Int]] = {

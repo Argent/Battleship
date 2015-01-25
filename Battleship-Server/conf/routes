@@ -7,7 +7,7 @@ GET         /                    controllers.Application.index
 
 POST        /register            controllers.Application.registerPlayer
 POST        /place               controllers.Application.placeShip
-GET         /opponent            controllers.Application.checkForOpponent
+PUT         /opponent            controllers.Application.checkForOpponent
 PUT         /shoot               controllers.Application.shoot
 
 # Map static resources from the /public folder to the /assets URL path
