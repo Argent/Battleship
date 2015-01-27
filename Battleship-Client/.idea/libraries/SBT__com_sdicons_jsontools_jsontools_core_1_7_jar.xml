@@ -1,9 +1,0 @@
-<component name="libraryTable">
-  <library name="SBT: com.sdicons.jsontools:jsontools-core:1.7:jar">
-    <CLASSES>
-      <root url="jar://$USER_HOME$/.ivy2/cache/com.sdicons.jsontools/jsontools-core/jars/jsontools-core-1.7-sources.jar!/" />
-    </CLASSES>
-    <JAVADOC />
-    <SOURCES />
-  </library>
-</component>

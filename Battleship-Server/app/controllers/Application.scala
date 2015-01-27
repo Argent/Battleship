@@ -135,18 +135,19 @@ object Application extends Controller {
   def checkForOpponent = Action(parse.json) { implicit request =>
 
     //TODO: check if both players set their ships
-    request.body\("userid") match {
+    println(request.body.toString())
+    request.body \ ("userid") match {
       case e: JsUndefined => BadRequest("must supply userid")
       case e: JsValue => {
         val userIndex = Game.matchUserId(request.body.\("userid").asOpt[Int].get)
-        if (userIndex == None){
+        if (userIndex == None) {
           BadRequest("userId not found")
-        }else if (!Game.gameStarted){
+        } else if (!Game.gameStarted) {
           NotFound("game has not started yet")
-        }else {
-          if (Game.currentPlayer == userIndex.get){
+        } else {
+          if (Game.currentPlayer == userIndex.get) {
             Ok("it's your turn")
-          }else {
+          } else {
             NotFound("it's not your turn yet")
           }
         }

@@ -14,32 +14,59 @@ import uk.co.bigbeeconsultants.http.header.MediaType._
 
 
 trait GameSession extends Session {
+  val httpClient = new HttpClient()
 
-  abstract override def initSession(ships: List[Ship]): Unit = {
+  val urls = Map(
+    "register" -> new URL("http://localhost:9000/register"),
+    "setship"  -> new URL("http://localhost:9000/place"),
+    "poll"     -> new URL("http://localhost:9000/opponent"),
+    "shoot"    -> new URL("http://localhost:9000/shoot")
+  )
 
-    val urls = Map(
-      "register" -> new URL("http://localhost:9000/register"),
-      "setship"  -> new URL("http://localhost:9000/place"),
-      "poll"     -> new URL("http://localhost:9000/opponent"),
-      "shoot"    -> new URL("http://localhost:9000/shoot")
-    )
 
-    val url = "http://localhost:9000/register"
+  def registerWithServer(): Unit = {
+    // userId bestimmen, danach register-Request an Server senden
 
-    val random = scala.util.Random
-    val id = random.nextInt(1000)
+    val id = scala.util.Random.nextInt(1000)
 
+    println("Registering with server: ID -> " + id)
 
     val requestBody = RequestBody(new JSONObject(Map("userid" -> id)).toString(),
       APPLICATION_JSON)
 
-    val httpClient = new HttpClient
-
     val response = httpClient.post(urls.get("register").get, Some(requestBody))
-    println(response.status)
-    println(response.body)
 
+    if(!response.status.isSuccess) {
+      println("Something really ugly happened. :(")
+    }
 
+    println("Successfully registered with server. Waiting for opponent.")
+    waitForOpponent(id)
+  }
+
+  def waitForOpponent(id: Int): Unit = {
+    println("Still waiting for opponent.")
+
+    val requestBody = RequestBody(new JSONObject(Map("userid" -> id)).toString(),
+      APPLICATION_JSON)
+
+    val response = httpClient.put(urls.get("poll").get, requestBody)
+
+    if(!response.status.isSuccess) {
+      Thread.sleep(5000)
+      waitForOpponent(id)
+    }
+
+    println("Opponent found. Start placing ships.")
+    initSession(Nil)
+
+  }
+
+  abstract override def initSession(ships: List[Ship]): Unit = {
+
+  println("Now placing a  ...")
+
+/*
    val requestBody2 = RequestBody(new JSONObject(
        Map(
          "userid" -> id,
@@ -56,9 +83,7 @@ trait GameSession extends Session {
     println(response2.body)
 
 
-    val response4 = httpClient.get(urls.get("poll").get)
-    println(response4.status)
-    println(response4.body)
+
 
 
     val requestBody3 = RequestBody(new JSONObject(
@@ -124,7 +149,7 @@ trait GameSession extends Session {
           case x :: xs => {
             initSession(xs)
           }
-        }*/
+        }*/*/
   }
 
   override def runSession(): Unit = {
