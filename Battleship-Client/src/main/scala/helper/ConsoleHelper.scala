@@ -8,18 +8,19 @@ import scala.io.StdIn.readLine
 object ConsoleHelper {
 
 
-  def getShipCoordinatesFromConsole(s: String) = {
+  def getShipCoordinatesFromConsole(s: String): (String, Int, String) = {
     val userInput = getInputFromConsole(s)
     val splittedInput = userInput.split(" ")
 
-    (CharacterCoordinate(splittedInput(0)),
+    (splittedInput(0),
     Integer.parseInt(splittedInput(1)),
-    splittedInput(2) match {
+    splittedInput(2))
+    /*splittedInput(2) match {
       case "E" => Direction.E
       case "N" => Direction.N
       case "S" => Direction.S
       case "W" => Direction.W
-    })
+    })*/
   }
 
 
