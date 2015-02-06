@@ -143,9 +143,13 @@ object Application extends Controller {
           BadRequest("userId not found")
         }else if (!Game.gameStarted){
           NotFound("game has not started yet")
+        }else if (Game.isWon != None) {
+          Ok(new JSONObject(Map("map" -> Game.boards.get(Game.players(userIndex.get).get).get.toString(), "won" -> Game.isWon.get)).toString())
         }else {
           if (Game.currentPlayer == userIndex.get){
-            Ok("it's your turn")
+            var actionList = List[JSONObject]()
+            Game.lastActions.foreach(a => actionList = actionList ::: a.toJSONObject :: Nil)
+            Ok(new JSONObject(Map("map" -> Game.boards.get(Game.players(userIndex.get).get).get.toString(), "actions" -> JSONArray(actionList), "won" -> None)).toString())
           }else {
             NotFound("it's not your turn yet")
           }
@@ -169,10 +173,18 @@ object Application extends Controller {
       val y = CharacterCoordinate(shot.y)
       val x = Integer.parseInt(shot.x)
       if (board.isInstanceOf[Some[Board]] && x >= 0 && x <= 10) {
-
+        if (Game.lastActions.length > 0 && Game.lastActions.last.hitType == HitTypes.Miss){
+          Game.lastActions.clear()
+        }
         val hit = board.get.shoot(x, y)
-        var json = Map[String, Any]("type" -> hit, "won" -> Game.isWon)
+        var json = Map[String, Any]("type" -> hit, "won" ->  {if (Game.isWon == None) {None} else {Game.isWon.get}})
         val part = board.get.ships(y)(x)
+        if (hit == HitTypes.HitAndSunk){
+          Game.lastActions.append(new PlayerAction((x,y),hit, Some(part.ship.getName)))
+        }else {
+          Game.lastActions.append(new PlayerAction((x,y),hit))
+        }
+
         if (hit == HitTypes.Miss) {
           Game.nextPlayer()
         } else if (hit == HitTypes.HitAndSunk) {

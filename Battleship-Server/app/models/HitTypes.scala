@@ -6,5 +6,5 @@ package models
 object HitTypes extends Enumeration {
   type HitTypes = Value
 
-  val Hit, Miss, HitAndSunk = Value
+  val None, Hit, Miss, HitAndSunk = Value
 }

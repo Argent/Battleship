@@ -1,14 +1,15 @@
 package shared
 
-import models.{Ship, AircraftCarrier, Shippart, Board}
+import models._
 
 /**
  * Created by Basti on 15.01.15.
  */
 object Game {
-  var players: Array[Option[Int]] = Array(None, None)
+  val players: Array[Option[Int]] = Array(None, None)
   val unplacedShips :scala.collection.mutable.Map[Int, List[Ship]] = scala.collection.mutable.Map()
   var currentPlayer: Int = 0
+  val lastActions :scala.collection.mutable.ListBuffer[PlayerAction] = scala.collection.mutable.ListBuffer()
   val boards: scala.collection.mutable.Map[Int, Board] = scala.collection.mutable.Map()
 
   def generateShipSet(): Map[Ship, Int] = {
