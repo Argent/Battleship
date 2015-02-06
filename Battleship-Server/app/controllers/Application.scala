@@ -50,6 +50,8 @@ object Application extends Controller {
             Game.unplacedShips.put(userid.get, shipSet.map {case (k,v) => List.fill(v)(k)}.flatten.toList)
             shipSet.foreach{x => shipList = shipList ::: new JSONObject(Map("name" -> x._1.getName, "form" -> x._1.formToJson, "number" -> x._2)) :: Nil}
 
+            println("Player "+ userid.get + " registered (index: " + newPlayerIndex + ")")
+
             Ok(new JSONObject(Map("ships" -> JSONArray(shipList), "userid" -> userid.get)).toString())
           }
         }else {
@@ -134,7 +136,6 @@ object Application extends Controller {
 
   def checkForOpponent = Action(parse.json) { implicit request =>
 
-    //TODO: check if both players set their ships
     request.body\("userid") match {
       case e: JsUndefined => BadRequest("must supply userid")
       case e: JsValue => {
@@ -149,7 +150,7 @@ object Application extends Controller {
           if (Game.currentPlayer == userIndex.get){
             var actionList = List[JSONObject]()
             Game.lastActions.foreach(a => actionList = actionList ::: a.toJSONObject :: Nil)
-            Ok(new JSONObject(Map("map" -> Game.boards.get(Game.players(userIndex.get).get).get.toString(), "actions" -> JSONArray(actionList), "won" -> None)).toString())
+            Ok(new JSONObject(Map("map" -> Game.boards.get(Game.players(userIndex.get).get).get.toString(), "actions" -> JSONArray(actionList), "won" -> "None")).toString())
           }else {
             NotFound("it's not your turn yet")
           }
@@ -177,7 +178,7 @@ object Application extends Controller {
           Game.lastActions.clear()
         }
         val hit = board.get.shoot(x, y)
-        var json = Map[String, Any]("type" -> hit, "won" ->  {if (Game.isWon == None) {None} else {Game.isWon.get}})
+        var json = Map[String, Any]("type" -> hit.toString, "won" ->  {if (Game.isWon == None) {"None"} else {Game.isWon.get}})
         val part = board.get.ships(y)(x)
         if (hit == HitTypes.HitAndSunk){
           Game.lastActions.append(new PlayerAction((x,y),hit, Some(part.ship.getName)))
@@ -190,6 +191,15 @@ object Application extends Controller {
         } else if (hit == HitTypes.HitAndSunk) {
           json += "shiptype" -> part.ship.getName
         }
+
+        println("Player: "+ Game.players(Game.getOtherPlayer()).get +", Board:")
+        board.get.printArray((x: Shippart) =>
+          if (x == null)
+            "."
+          else if (x.isDestroyed)
+            "X"
+          else
+            "0")
 
         Ok(new JSONObject(json).toString())
       } else {

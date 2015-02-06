@@ -38,9 +38,9 @@ object Game {
     if(!gameStarted) {
       None
     } else if(boards.get(players(0).get).get.ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
-      players(0)
-    } else if(boards.get(players(1).get).get.ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
       players(1)
+    } else if(boards.get(players(1).get).get.ships.flatten.filter(_.isInstanceOf[Shippart]).filter(_.isDestroyed == false).length == 0) {
+      players(0)
     } else {
       None
     }

@@ -14,7 +14,7 @@ class PlayerAction(val coords :(Int,Int), val hitType :HitTypes, val shipType :O
       if (shipType == None){
         new JSONObject(Map("coordinates" -> (coords._1, (coords._2 + 65).asInstanceOf[Char]), "type" -> hitType))
       }else {
-        new JSONObject(Map("coordinates" -> coords, "type" -> hitType, "shiptype" -> shipType.get))
+        new JSONObject(Map("coordinates" -> coords, "type" -> hitType.toString, "shiptype" -> shipType.get))
       }
     }
 }
