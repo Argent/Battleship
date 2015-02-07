@@ -181,9 +181,9 @@ object Application extends Controller {
         var json = Map[String, Any]("type" -> hit.toString, "won" ->  {if (Game.isWon == None) {"None"} else {Game.isWon.get}})
         val part = board.get.ships(y)(x)
         if (hit == HitTypes.HitAndSunk){
-          Game.lastActions.append(new PlayerAction((x,y),hit, Some(part.ship.getName)))
+          Game.lastActions.append(new PlayerAction(List(x, y),hit, Some(part.ship.getName)))
         }else {
-          Game.lastActions.append(new PlayerAction((x,y),hit))
+          Game.lastActions.append(new PlayerAction(List(x, y),hit))
         }
 
         if (hit == HitTypes.Miss) {

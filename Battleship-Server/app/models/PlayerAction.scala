@@ -2,19 +2,19 @@ package models
 
 import models.HitTypes.HitTypes
 
-import scala.util.parsing.json.JSONObject
+import scala.util.parsing.json.{JSONArray, JSONObject}
 
 /**
  * Created by ben on 06.02.15.
  */
-class PlayerAction(val coords :(Int,Int), val hitType :HitTypes, val shipType :Option[String]) {
-    def this(coords :(Int,Int), hitType :HitTypes) = this(coords, hitType, None)
+class PlayerAction(val coords :List[Int], val hitType :HitTypes, val shipType :Option[String]) {
+    def this(coords :List[Int], hitType :HitTypes) = this(coords, hitType, None)
 
     def toJSONObject :JSONObject = {
       if (shipType == None){
-        new JSONObject(Map("coordinates" -> (coords._1, (coords._2 + 65).asInstanceOf[Char]), "type" -> hitType))
+        new JSONObject(Map("coordinates" -> new JSONArray(List(coords.head, (coords.tail.head + 65).asInstanceOf[Char])), "type" -> hitType.toString))
       }else {
-        new JSONObject(Map("coordinates" -> coords, "type" -> hitType.toString, "shiptype" -> shipType.get))
+        new JSONObject(Map("coordinates" -> new JSONArray(coords), "type" -> hitType.toString, "shiptype" -> shipType.get))
       }
     }
 }
