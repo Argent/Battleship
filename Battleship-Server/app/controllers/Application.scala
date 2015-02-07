@@ -145,7 +145,9 @@ object Application extends Controller {
         }else if (!Game.gameStarted){
           NotFound("game has not started yet")
         }else if (Game.isWon != None) {
-          Ok(new JSONObject(Map("map" -> Game.boards.get(Game.players(userIndex.get).get).get.toString(), "won" -> Game.isWon.get)).toString())
+          var actionList = List[JSONObject]()
+          Game.lastActions.foreach(a => actionList = actionList ::: a.toJSONObject :: Nil)
+          Ok(new JSONObject(Map("map" -> Game.boards.get(Game.players(userIndex.get).get).get.toString(), "actions" -> JSONArray(actionList), "won" -> Game.isWon.get)).toString())
         }else {
           if (Game.currentPlayer == userIndex.get){
             var actionList = List[JSONObject]()
