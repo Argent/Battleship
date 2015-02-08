@@ -1,4 +1,4 @@
-name := "Battleship"
+name := "Battleship-Client"
 
 version := "1.0"
 
@@ -13,6 +13,6 @@ libraryDependencies ++= Seq(
 
 libraryDependencies += "org.scala-lang.modules" %% "scala-parser-combinators" % "1.0.3"
 
-resolvers += "Big Bee Consultants" at "http://repo.bigbeeconsultants.co.uk/repo"
+libraryDependencies += "org.scalatest" % "scalatest_2.11" % "2.2.1" % "test"
 
-    
+resolvers += "Big Bee Consultants" at "http://repo.bigbeeconsultants.co.uk/repo"

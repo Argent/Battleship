@@ -1,7 +1,11 @@
-package models
+package model
 
 import scala.collection.immutable.HashMap
 
+/**
+ *  This class allows for seamless conversion between character coordinates (y-Axis, A-J) and
+ *  the associated int-Values (0-9)
+ */
 
 class CharacterCoordinate(val s: String)
 
@@ -20,5 +24,13 @@ object CharacterCoordinate {
 
   implicit def Int2CharacterCoordinate(i: Int): CharacterCoordinate = {
     CharacterCoordinate(translator.filter(_._2 == i).toList.head._1)
+  }
+
+  implicit def CharacterCoordinate2String(c: CharacterCoordinate): String = {
+    c.s
+  }
+
+  implicit def String2CharacterCoordinate(s: String): CharacterCoordinate = {
+    CharacterCoordinate(s)
   }
 }
