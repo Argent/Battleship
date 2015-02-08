@@ -17,6 +17,7 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
     return this.getClass.getSimpleName
   }
 
+  // returns an array of the ships coordinates in list format (needed because tupples serialized to json)
   def formToArray :List[List[Int]] = {
     var retList = List[List[Int]]()
     coords foreach{ x :(Int, Int) => retList = retList ::: List(x._1, x._2) :: Nil}
@@ -31,6 +32,7 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
     return JSONArray(retList)
   }
 
+  // rotates the coordinates of the ship to the given direction
   def translateAndRotate(x: Int, y: Int, d: Direction) {
     println("Direction: " + d)
     println("(" + x + ", " + y + ")")
@@ -49,6 +51,7 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
     coords = tmpCoords
   }
 
+  // sets the ship on the given board (adds shipparts to the board array)
   def setOnBoard(coords: List[(Int, Int)], setCoords: List[(Int, Int)], b: Board): Option[Board] = {
     coords match {
       case Nil => Some(b)
@@ -64,6 +67,7 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
     }
   }
 
+  // removes the ship from the given board
   def unsetShip(setCoords: List[(Int, Int)], b: Board): Option[Board] = {
     setCoords match {
       case Nil => None
@@ -73,7 +77,8 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
       }
     }
   }
-  
+
+  // returns true if all parts of the ship have been destroyed
   def isDestroyed: Boolean = {
     parts.filter(_.isDestroyed == false).length == 0
   }

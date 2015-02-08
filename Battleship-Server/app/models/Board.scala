@@ -9,6 +9,7 @@ import models.HitTypes.HitTypes
 class Board {
   val ships = Array.ofDim[Shippart](10, 10)
 
+  // returns true if the shippart could be placed on the board
   def setShippart(x: Int, y: Int, s: Shippart): Boolean = {
 
     if(x < 0 || y < 0 || x > 9 || y > 9) {
@@ -38,12 +39,14 @@ class Board {
     true
   }
 
+  // removes a shippart from the board
   def unsetShippart(x: Int, y: Int, s: Ship) = {
     if(ships(y)(x).ship == s) {
       ships(y)(x) = null
     }
   }
 
+  // shoot at the given coordinates and returns if something was hit
   def shoot(x: Int, y: Int): HitTypes = {
     if(ships(y)(x) != null) {
       ships(y)(x).isDestroyed = true
@@ -61,6 +64,7 @@ class Board {
     ships(y)(x).ship
   }
 
+  // flattens the board to a string that can be sent to the client via json
   override def toString(): String ={
   /* ships.flatten.collect { part => part match {
      case null => yield 's'
@@ -74,6 +78,7 @@ class Board {
     stringBoard
   }
 
+  // prints the board to the console
   def printArray(printTile: Shippart => String): Unit = {
     val yAxis = Array('A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J')
     var i = 0
