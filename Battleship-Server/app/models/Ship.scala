@@ -10,7 +10,7 @@ abstract case class Ship(var coords: List[(Int, Int)]) {
 
 
   override def toString: String = {
-    "Hi, I'm a " + this.getClass() + "! My coords are: " + coords.toString
+    "Hi, I'm a " + this.getName + "! My coords are: " + coords.toString
   }
 
   def getName :String = {

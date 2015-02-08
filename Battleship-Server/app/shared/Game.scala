@@ -13,9 +13,10 @@ object Game {
   val boards: scala.collection.mutable.Map[Int, Board] = scala.collection.mutable.Map()
 
   def generateShipSet(): Map[Ship, Int] = {
-    Map(new Submarine() -> 1 /*new Battleship()::new Battleship()::new Destroyer()::new Destroyer()::
+    Map(new PatrolBoat() -> 2, new Battleship() -> 1, new Destroyer() -> 1)
+    /*Map(new Submarine() -> 1, new Battleship() -> 1, new Destroyer() -> 2, ::new Battleship()::new Destroyer()::new Destroyer()::
       new Destroyer()::new Submarine()::new Submarine()::new Submarine()::new Submarine()::
-      new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::Nil*/)
+      new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::new PatrolBoat()::Nil)*/
   }
 
   def gameStarted: Boolean = {

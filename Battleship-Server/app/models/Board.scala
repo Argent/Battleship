@@ -14,6 +14,9 @@ class Board {
     if(x < 0 || y < 0 || x > 9 || y > 9) {
       return false
     }
+    if (ships(y)(x) != null){
+      return false
+    }
     for(i <- -1 to 1) {
       for(j <- -1 to 1) {
         val checkY = y + i

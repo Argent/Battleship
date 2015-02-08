@@ -80,7 +80,6 @@ object Application extends Controller {
       case "AircraftCarrier" => Option[Ship] {new AircraftCarrier()}
       case "Destroyer" => Option[Ship] {new Destroyer()}
       case "PatrolBoat" =>Option[Ship] {new PatrolBoat()}
-      case "Submarine" => Option[Ship] {new Submarine()}
       case _ => None
     }
 
